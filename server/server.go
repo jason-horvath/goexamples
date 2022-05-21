@@ -25,7 +25,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func multiReturnHandler() (string, Handler) {
 	uri := "/multireturnhandler"
-
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		content, err := fmt.Fprintf(w, "This is the multi return handler in the server package.")
 		if err != nil {

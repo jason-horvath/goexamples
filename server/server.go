@@ -64,13 +64,13 @@ func htmlExample() (string, Handler) {
 		}
 
 		templatePath := "templates/htmlexample.go.html"
-		renderTemplate(w, templatePath, templateData)
+		renderHtmlTemplate(w, templatePath, templateData)
 	}
 	return uri, handler
 }
 
 // Renders the template using the http response writer
-func renderTemplate(w http.ResponseWriter, templatePath string, templateData ExampleHtmlData) {
+func renderHtmlTemplate(w http.ResponseWriter, templatePath string, templateData ExampleHtmlData) {
 	w.Header().Set("Content-Type", "text/html")
 	htmlTemplate, err := template.ParseFiles(templatePath)
 	if err != nil {

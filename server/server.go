@@ -30,7 +30,7 @@ func multiReturnHandler() (string, Handler) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Printf("Number of bytes in the response content: %d\n", content))
+		fmt.Printf("Number of bytes in the response content: %d\n", content)
 	}
 
 	return uri, handler

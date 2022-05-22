@@ -20,7 +20,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(fmt.Sprintf("Number of bytes in the response content: %d", content))
+	fmt.Printf("Number of bytes in the response content: %d\n", content)
 }
 
 func multiReturnHandler() (string, Handler) {
@@ -30,7 +30,7 @@ func multiReturnHandler() (string, Handler) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		fmt.Println(fmt.Sprintf("Number of bytes in the response content: %d", content))
+		fmt.Printf("Number of bytes in the response content: %d\n", content))
 	}
 
 	return uri, handler

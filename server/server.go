@@ -14,6 +14,7 @@ type ExampleHtmlData struct {
 	ListItems   []string
 }
 
+// This is to start the server after handling the routes.
 func ServerStart() {
 	http.HandleFunc("/", index)
 
@@ -27,6 +28,7 @@ func ServerStart() {
 	_ = http.ListenAndServe(":3500", nil)
 }
 
+// The handler for the index route
 func index(w http.ResponseWriter, r *http.Request) {
 	content, err := fmt.Fprintf(w, "This is the index handler in the server package.")
 	if err != nil {
@@ -35,6 +37,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Number of bytes in the response content: %d\n", content)
 }
 
+// An example of using a multiple return function as a handler
 func multiReturnHandler() (string, Handler) {
 	uri := "/multireturnhandler"
 	handler := func(w http.ResponseWriter, r *http.Request) {
@@ -50,6 +53,7 @@ func multiReturnHandler() (string, Handler) {
 	return uri, handler
 }
 
+// Html Template route hander, sets the data, the template path, and renders the remplate
 func htmlExample() (string, Handler) {
 	uri := "/htmlexample"
 	handler := func(w http.ResponseWriter, r *http.Request) {
@@ -65,6 +69,7 @@ func htmlExample() (string, Handler) {
 	return uri, handler
 }
 
+// Renders the template using the http response writer
 func renderTemplate(w http.ResponseWriter, templatePath string, templateData ExampleHtmlData) {
 	w.Header().Set("Content-Type", "text/html")
 	htmlTemplate, err := template.ParseFiles(templatePath)

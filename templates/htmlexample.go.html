@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>{{.Heading}}</title>
+  </head>
+  <body>
+    <div>
+      <h1>{{.Heading}}</h1>
+      <p>{{.Description}}</p>
+      <h4>Things you can do:</h4>
+      {{ if .ListItems }}
+        <ul>
+        {{ range .ListItems }}
+          <li>{{ . }}</li>
+        {{ end }}
+        </ul>
+      {{ end }}
+    </div>
+  </body>
+</html>

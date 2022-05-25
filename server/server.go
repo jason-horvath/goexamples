@@ -81,7 +81,7 @@ func htmlExample() (string, Handler) {
 			[]string{"Learn", "Go", "Have", "Fun", "Grow"},
 		}
 
-		templatePath := "templates/htmlexample.go.html"
+		templatePath := "templates/htmlexample.tmpl"
 		renderHtmlTemplate(w, templatePath, templateData)
 	}
 	return uri, handler

@@ -6,28 +6,12 @@ import (
 	"log"
 	"net/http"
 	"text/template"
+
+	"github.com/jason-horvath/goexamples/render"
+	"github.com/jason-horvath/goexamples/schema"
 )
 
 type Handler func(w http.ResponseWriter, r *http.Request)
-
-type ExampleHtmlData struct {
-	Heading     string
-	Description string
-	ListItems   []string
-}
-
-type Customer struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	ShoeSize  int    `json:"shoe_size"`
-	HasOrder  bool   `json:"has_order"`
-}
-
-type AlteredJson struct {
-	Message      string `json:"message"`
-	SlicePrinted string `json:"slice_printed"`
-	CustomerData []Customer
-}
 
 // ServerStart - Start the server after handling the routes.
 func ServerStart() {
@@ -75,10 +59,10 @@ func multiReturnHandler() (string, Handler) {
 func htmlExample() (string, Handler) {
 	uri := "/htmlexample"
 	handler := func(w http.ResponseWriter, r *http.Request) {
-		templateData := ExampleHtmlData{
-			"This is the Example Heading",
-			"Here is the example description for the paragraph in the template.",
-			[]string{"Learn", "Go", "Have", "Fun", "Grow"},
+		templateData := schema.ExampleHtmlData{
+			Heading:     "This is the Example Heading",
+			Description: "Here is the example description for the paragraph in the template.",
+			ListItems:   []string{"Learn", "Go", "Have", "Fun", "Grow"},
 		}
 
 		templatePath := "templates/htmlexample.tmpl"
@@ -88,7 +72,7 @@ func htmlExample() (string, Handler) {
 }
 
 // renderHtmlTemplate - Renders the template using the http response writer
-func renderHtmlTemplate(w http.ResponseWriter, templatePath string, templateData ExampleHtmlData) {
+func renderHtmlTemplate(w http.ResponseWriter, templatePath string, templateData schema.ExampleHtmlData) {
 	w.Header().Set("Content-Type", "text/html")
 	htmlTemplate, err := template.ParseFiles(templatePath)
 	if err != nil {
@@ -122,7 +106,7 @@ func jsonExample() (string, Handler) {
   `
 	uri := "/json"
 
-	var customerUnmarshalled []Customer
+	var customerUnmarshalled []schema.Customer
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		err := json.Unmarshal([]byte(customerJson), &customerUnmarshalled)
 		if err != nil {
@@ -131,7 +115,7 @@ func jsonExample() (string, Handler) {
 
 		slicePrinted := fmt.Sprint(customerUnmarshalled)
 
-		var jsonToRender AlteredJson
+		var jsonToRender schema.OutputJason
 		jsonToRender.Message = "See the output of the slice printed, and then the altered custoemr data below."
 		jsonToRender.SlicePrinted = slicePrinted
 
@@ -140,24 +124,8 @@ func jsonExample() (string, Handler) {
 		customerUnmarshalled[1].FirstName = "Mary"
 		customerUnmarshalled[1].HasOrder = true
 		jsonToRender.CustomerData = customerUnmarshalled
-		renderJson(w, jsonToRender)
+		render.JsonOutput(w, jsonToRender)
 	}
 
 	return uri, handler
-}
-
-// renderJson - Takes the AlteredJson struct and renders it
-func renderJson(w http.ResponseWriter, jsonToRender AlteredJson) {
-	w.Header().Set("Content-Type", "application/json")
-
-	renderedJson, err := json.MarshalIndent(jsonToRender, "", "    ")
-	if err != nil {
-		log.Println(err)
-	}
-
-	_, err = w.Write(renderedJson)
-
-	if err != nil {
-		panic(err)
-	}
 }

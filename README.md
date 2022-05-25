@@ -1,3 +1,3 @@
 # Go Examples
  
- Examples of snippets in Go!
+Just a collection of examples and package structure.

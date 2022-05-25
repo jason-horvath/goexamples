@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"text/template"
 
 	"github.com/jason-horvath/goexamples/render"
 	"github.com/jason-horvath/goexamples/schema"
@@ -66,24 +65,9 @@ func htmlExample() (string, Handler) {
 		}
 
 		templatePath := "templates/htmlexample.tmpl"
-		renderHtmlTemplate(w, templatePath, templateData)
+		render.HtmlTemplate(w, templatePath, templateData)
 	}
 	return uri, handler
-}
-
-// renderHtmlTemplate - Renders the template using the http response writer
-func renderHtmlTemplate(w http.ResponseWriter, templatePath string, templateData schema.ExampleHtmlData) {
-	w.Header().Set("Content-Type", "text/html")
-	htmlTemplate, err := template.ParseFiles(templatePath)
-	if err != nil {
-		log.Println(err)
-	}
-
-	err = htmlTemplate.Execute(w, templateData)
-
-	if err != nil {
-		panic(err)
-	}
 }
 
 // jsonExample - Example of handling json

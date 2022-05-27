@@ -64,7 +64,7 @@ func htmlExample() (string, Handler) {
 			ListItems:   []string{"Learn", "Go", "Have", "Fun", "Grow"},
 		}
 
-		templatePath := "templates/htmlexample.tmpl"
+		templatePath := "templates/htmlexample.go.html"
 		render.HtmlTemplate(w, templatePath, templateData)
 	}
 	return uri, handler

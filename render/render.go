@@ -54,7 +54,7 @@ func BuildTemplateCache() (map[string]*template.Template, error) {
 	if err != nil {
 		return tmplCache, err
 	}
-	log.Println("pages", pages)
+
 	for _, page := range pages {
 		pageName := filepath.Base(page)
 
@@ -75,7 +75,7 @@ func BuildTemplateCache() (map[string]*template.Template, error) {
 				return tmplCache, err
 			}
 		}
-		log.Println("Page name", pageName)
+
 		tmplCache[pageName] = tmplSet
 	}
 

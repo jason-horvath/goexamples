@@ -22,6 +22,9 @@ func ServerStart() {
 	htmlUri, htmlHandler := htmlExample()
 	http.HandleFunc(htmlUri, htmlHandler)
 
+	cachedUri, cachedHandler := cachedExample()
+	http.HandleFunc(cachedUri, cachedHandler)
+
 	jsonUri, jsonHandler := jsonExample()
 	http.HandleFunc(jsonUri, jsonHandler)
 
@@ -64,8 +67,23 @@ func htmlExample() (string, Handler) {
 			ListItems:   []string{"Learn", "Go", "Have", "Fun", "Grow"},
 		}
 
-		templatePath := "templates/htmlexample.go.html"
+		templatePath := "./templates/static/htmlexample.go.html"
 		render.HtmlTemplate(w, templatePath, templateData)
+	}
+	return uri, handler
+}
+
+// cachedExample - Rendering tempaltes using the built cache in the render package.
+func cachedExample() (string, Handler) {
+	uri := "/cachedexample"
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		templateData := schema.ExampleHtmlData{
+			Heading:     "This template is using a cache",
+			Description: "Here is the cached description for the paragraph in the template.",
+			ListItems:   []string{"Learn", "Go", "Have", "Fun", "Grow", "And", "Cache", "Stuff"},
+		}
+		pageName := "cachedexample.go.html"
+		render.CachedHtmlTemplate(w, pageName, templateData)
 	}
 	return uri, handler
 }

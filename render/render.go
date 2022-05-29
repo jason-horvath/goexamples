@@ -1,13 +1,17 @@
 package render
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
+	"path/filepath"
 	"text/template"
 
 	"github.com/jason-horvath/goexamples/schema"
 )
+
+var tmplFunctions = template.FuncMap{}
 
 // HtmlTemplate - Renders the template using the http response writer
 func HtmlTemplate(w http.ResponseWriter, templatePath string, templateData schema.ExampleHtmlData) {
@@ -22,6 +26,60 @@ func HtmlTemplate(w http.ResponseWriter, templatePath string, templateData schem
 	if err != nil {
 		panic(err)
 	}
+}
+
+func CachedHtmlTemplate(w http.ResponseWriter, tmplName string, templateData schema.ExampleHtmlData) {
+	tmplCache, err := BuildTemplateCache()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	tmpl, ok := tmplCache[tmplName]
+	if !ok {
+		log.Fatal(err)
+	}
+
+	buffer := new(bytes.Buffer)
+	_ = tmpl.Execute(w, templateData)
+	_, err = buffer.WriteTo(w)
+	if err != nil {
+		log.Println("Error writing template.", err)
+	}
+}
+
+func BuildTemplateCache() (map[string]*template.Template, error) {
+	tmplCache := map[string]*template.Template{}
+
+	pages, err := filepath.Glob("./templates/pages/*.go.html")
+	if err != nil {
+		return tmplCache, err
+	}
+	log.Println("pages", pages)
+	for _, page := range pages {
+		pageName := filepath.Base(page)
+
+		tmplSet, err := template.New(pageName).Funcs(tmplFunctions).ParseFiles(page)
+		if err != nil {
+			return tmplCache, err
+		}
+
+		layouts, err := filepath.Glob("./templates/layouts/*.go.html")
+		log.Println("Layout test", layouts)
+		if err != nil {
+			return tmplCache, err
+		}
+
+		if len(layouts) > 0 {
+			tmplSet, err = tmplSet.ParseGlob("./templates/layouts/*.go.html")
+			if err != nil {
+				return tmplCache, err
+			}
+		}
+		log.Println("Page name", pageName)
+		tmplCache[pageName] = tmplSet
+	}
+
+	return tmplCache, nil
 }
 
 // JsonOutput - Takes the AlteredJson struct and renders it

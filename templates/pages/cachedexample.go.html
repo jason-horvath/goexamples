@@ -1,0 +1,15 @@
+{{ template "base" .}}
+{{ define "content"}}
+  <div>
+    <h1>{{.Heading}}</h1>
+    <p>{{.Description}}</p>
+    <h4>Things you can do:</h4>
+    {{ if .ListItems }}
+      <ul>
+      {{ range .ListItems }}
+        <li>{{ . }}</li>
+      {{ end }}
+      </ul>
+    {{ end }}
+  </div>
+{{ end }}

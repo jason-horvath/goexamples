@@ -8,10 +8,17 @@ import (
 	"path/filepath"
 	"text/template"
 
+	"github.com/jason-horvath/goexamples/config"
 	"github.com/jason-horvath/goexamples/schema"
 )
 
 var tmplFunctions = template.FuncMap{}
+
+var app *config.AppConfig
+
+func InitConfig(a *config.AppConfig) {
+	app = a
+}
 
 // HtmlTemplate - Renders the template using the http response writer
 func HtmlTemplate(w http.ResponseWriter, templatePath string, templateData schema.ExampleHtmlData) {
@@ -29,19 +36,16 @@ func HtmlTemplate(w http.ResponseWriter, templatePath string, templateData schem
 }
 
 func CachedHtmlTemplate(w http.ResponseWriter, tmplName string, templateData schema.ExampleHtmlData) {
-	tmplCache, err := BuildTemplateCache()
-	if err != nil {
-		log.Fatal(err)
-	}
+	tmplCache := app.TemplateCache
 
 	tmpl, ok := tmplCache[tmplName]
 	if !ok {
-		log.Fatal(err)
+		log.Fatal("Unable to load template from cache.")
 	}
 
 	buffer := new(bytes.Buffer)
 	_ = tmpl.Execute(w, templateData)
-	_, err = buffer.WriteTo(w)
+	_, err := buffer.WriteTo(w)
 	if err != nil {
 		log.Println("Error writing template.", err)
 	}

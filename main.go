@@ -15,5 +15,7 @@ func main() {
 		log.Println("Unable to load the template cache", err)
 	}
 	app.TemplateCache = tmplCache
+	render.InitConfig(&app)
+
 	server.ServerStart()
 }

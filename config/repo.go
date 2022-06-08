@@ -11,3 +11,7 @@ func CreateRepo(a *AppConfig) *Repository {
 		App: a,
 	}
 }
+
+func SetRepo(r *Repository) {
+	Repo = r
+}

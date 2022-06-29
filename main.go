@@ -15,6 +15,12 @@ func main() {
 		log.Println("Unable to load the template cache", err)
 	}
 	app.TemplateCache = tmplCache
+	repo := config.CreateRepo(&app)
+	config.SetRepo(repo)
+
+	config.Repo.App.UseCache = true
+
+	app.TemplateCache = tmplCache
 	render.InitConfig(&app)
 
 	server.ServerStart()

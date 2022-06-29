@@ -38,7 +38,7 @@ func MultiReturnHandler() (string, Handler) {
 }
 
 // htmlExample - Html Template route hander, sets the data, the template path, and renders the remplate
-func htmlExample() (string, Handler) {
+func HtmlExample() (string, Handler) {
 	uri := "/htmlexample"
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		templateData := schema.ExampleHtmlData{
